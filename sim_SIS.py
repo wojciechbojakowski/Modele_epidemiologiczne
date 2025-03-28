@@ -22,7 +22,7 @@ iterator=0
 
 #pierwsza wersja bez animacji
 def while_func():
-    while(all_R<size*size and iterator<10):
+    while(iterator<10):
         for i in range(size):
             for j in range(size):
                 if(iterator%2==0):#parzyste iteracje
