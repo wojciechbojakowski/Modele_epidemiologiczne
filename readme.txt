@@ -1,0 +1,1 @@
+W pliku sim_SIP.py jest ostateczna wersja symulacji. Reszta plików to poligony doświadczlne. Pozdrawiam, miłej kwausi.

@@ -2,27 +2,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 
-# Parametry symulacji
-size = 50  # Rozmiar siatki (size x size)
-infection_prob = 0.3  # Prawdopodobieństwo zakażenia sąsiada
+
+size = 50  # Rozmiar siatki
+infection_prob = 0.1  # Prawdopodobieństwo zakażenia sąsiada
 recovery_prob = 0.1   # Prawdopodobieństwo wyzdrowienia
 steps = 200  # Liczba kroków symulacji
 
-# Inicjalizacja siatki: 0 - zdrowy (S), 1 - zakażony (I)
 grid = np.zeros((size, size), dtype=int)
 
-# Losowe początkowe infekcje
-initial_infected = np.random.choice(range(size*size), size*size // 10, replace=False)
-for idx in initial_infected:
-    grid[idx // size, idx % size] = 1
+#t0
+initial_infected = np.random.choice(range(size*size), size*size // 100, replace=False)
+for id in initial_infected:
+    grid[id // size, id % size] = 1
 
-# Przechowywanie stanów siatki w czasie
+
 history = [grid.copy()]
 for _ in range(steps - 1):
     new_grid = history[-1].copy()
     for i in range(size):
         for j in range(size):
-            if history[-1][i, j] == 1:  # Zainfekowany osobnik
+            if history[-1][i, j] == 1:  # chory
                 if np.random.rand() < recovery_prob:
                     new_grid[i, j] = 0  # Wyzdrowienie
                 else:
@@ -34,7 +33,6 @@ for _ in range(steps - 1):
                                 new_grid[ni, nj] = 1
     history.append(new_grid.copy())
 
-# Tworzenie interaktywnej wizualizacji
 fig, ax = plt.subplots()
 plt.subplots_adjust(bottom=0.2)
 mat = ax.matshow(history[0], cmap='viridis')
