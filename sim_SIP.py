@@ -147,4 +147,5 @@ def update(frame):
     return [im, line_S, line_I, line_R]
 
 ani = animation.FuncAnimation(fig, update, frames=200, interval=100, blit=False, repeat=False)
+#ani.save("animation.mp4", writer="ffmpeg")
 plt.show()
