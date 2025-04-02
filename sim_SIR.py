@@ -21,7 +21,7 @@ all_I=number_patient0
 all_R=0
 iterator=0
 
-#pierwsza wersja bez animacji
+#pierwsza wersja bez animacji obecnie nie wykorzystywana
 def while_func():
     while(all_R<size*size and iterator<10):
         for i in range(size):
@@ -103,11 +103,12 @@ line_R, = ax2.plot([], [], label="R ", color='r')
 ax2.legend()
 
 def update(frame):
-    if frame >= 200:  # 200 frame ->END
+    global all_I
+    if (all_I==0 or frame >= 400):  # 400 frame ->END
         ani.event_source.stop()
         return
     global grid
-    global all_R, all_I, all_S
+    global all_R, all_S
     global h_S,h_I,h_R
     #global line_S,line_I,line_R
 
@@ -146,6 +147,6 @@ def update(frame):
     im.set_array(grid)
     return [im, line_S, line_I, line_R]
 
-ani = animation.FuncAnimation(fig, update, frames=200, interval=100, blit=False, repeat=False)
+ani = animation.FuncAnimation(fig, update, frames=400, interval=100, blit=False, repeat=False)
 #ani.save("animation.mp4", writer="ffmpeg")
 plt.show()
