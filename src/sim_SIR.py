@@ -4,9 +4,9 @@ import matplotlib.animation as animation
 import matplotlib.patches as mpatches
 
 size = 50  # Rozmiar siatki
-infection_prob = 0.1  # Prawdopodobieństwo zakażenia sąsiada
-recovery_prob = 0.1   # Prawdopodobieństwo wyzdrowienia
-number_patient0 = 20 #liczba chorych na początku
+infection_prob = 0.4  # Prawdopodobieństwo zakażenia sąsiada
+recovery_prob = 0.1  # Prawdopodobieństwo wyzdrowienia
+number_patient0 = 75 #liczba chorych na początku
 
 grid = np.zeros((size, size), dtype=int)
 
