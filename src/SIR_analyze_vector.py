@@ -35,6 +35,7 @@ def simulate(infection_prob, recovery_prob, max_iter=1000):
         if np.sum(grid == 1) == 0:
             break
         grid = step(grid, infection_prob, recovery_prob)
+        #print(f"{np.sum(grid == 0)}, {np.sum(grid == 2)}, {infection_prob}, {recovery_prob}")
 
     return np.sum(grid == 0), np.sum(grid == 2)
 
@@ -52,14 +53,15 @@ for i_idx, i in enumerate(values):
             tSUM_S += tS
             tSUM_R += tR
 
-        grid_a_b[i_idx, j_idx] = tSUM_S / 10  # lub tSUM_R / 10
+        grid_a_b[i_idx, j_idx] = tSUM_S/10  # lub tSUM_R / 10
+        #print(f"{tSUM_S}, {tSUM_R},{i}, {j}")
     print(f"postęp {i_idx+1}/{size2}")
 
 plt.figure(figsize=(8, 6))
 plt.imshow(grid_a_b, cmap='jet', origin='lower', extent=[0.01, 0.49, 0.01, 0.49])
 plt.colorbar(label='Średnia liczba S po zakończeniu')
-plt.xlabel('infection_prob')
-plt.ylabel('recovery_prob')
+plt.ylabel('infection_prob')
+plt.xlabel('recovery_prob')
 plt.title('Wpływ parametrów infekcji i wyzdrowienia na liczbę S')
 plt.grid(False)
 plt.show()

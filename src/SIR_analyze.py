@@ -135,6 +135,8 @@ def while_func(infection_prob:float,recovery_prob:float):
                                 acumulate_prop=acumulate_prop+infection_prob#dodawanie do siebie prawdopodobieństwa zachorowania od sąsiadów
                         if np.random.rand() < acumulate_prop:
                             grid2[i, j] = 1#zachorowanie
+                            all_S=all_S-1
+                            all_I=all_I+1
                 if(iterator%2==1):#parzyste iteracje
                     if(grid2[i,j]==1):#infected
                         if np.random.rand() < recovery_prob:
@@ -159,11 +161,11 @@ def while_func(infection_prob:float,recovery_prob:float):
                             grid[i, j] = 1#zachorowanie
                             all_S=all_S-1
                             all_I=all_I+1
-        #print(f"S {all_S}, I {all_I}, R {all_R}, sum {all_S+all_I+all_R}")
+        print(f"S {all_S}, I {all_I}, R {all_R}, sum {all_S+all_I+all_R}")
         iterator=iterator+1
     return [all_S,all_R]
 
-values = np.arange(0.01, 0.5, 0.01)
+values = np.arange(0, 0.5, 0.1)
 size2 = len(values)
 grid_a_b = np.zeros((size2, size2), dtype=float)
 
@@ -172,12 +174,13 @@ for i_idx, i in enumerate(values):
         tSUM_S = 0
         tSUM_R = 0
 
-        for _ in range(10):
+        for _ in range(1):
             tS, tR = while_func(i, j)
             tSUM_S += tS
-            tSUM_R += tR
+            tSUM_R = tR
 
-        grid_a_b[i_idx, j_idx] = tSUM_S / 10  # lub tSUM_R / 10
+        grid_a_b[i_idx, j_idx] = tSUM_R  # lub tSUM_R / 10
+        print(f"{tSUM_R}")
     print(f"postęp {i_idx+1}/{size2}")
 
 plt.figure(figsize=(8, 6))
@@ -185,6 +188,6 @@ plt.imshow(grid_a_b, cmap='jet', origin='lower', extent=[0.01, 0.49, 0.01, 0.49]
 plt.colorbar(label='Średnia liczba S po zakończeniu')
 plt.xlabel('infection_prob')
 plt.ylabel('recovery_prob')
-plt.title('Wpływ parametrów infekcji i wyzdrowienia na liczbę S')
+plt.title('Wpływ parametrów infekcji i wyzdrowienia na liczbę R')
 plt.grid(False)
 plt.show()
