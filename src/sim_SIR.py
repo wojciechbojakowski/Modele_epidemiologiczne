@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import matplotlib.patches as mpatches
 from scipy.integrate import odeint
+from matplotlib.widgets import Slider, Button
 
 
 size = 50  # Rozmiar siatki
@@ -79,6 +80,46 @@ def while_func():
 
 h_S, h_I, h_R = [], [], [] # tablice na liczbe osób w czasie
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 5)) #dwa wykresy
+plt.subplots_adjust(left=0.1, bottom=0.25)  # więcej miejsca na suwaki i przycisk
+# Suwaki
+ax_slider_beta = plt.axes([0.1, 0.1, 0.3, 0.03])
+ax_slider_gamma = plt.axes([0.1, 0.15, 0.3, 0.03])
+slider_beta = Slider(ax_slider_beta, 'Infection Prob', 0.01, 1.0, valinit=infection_prob, valstep=0.01)
+slider_gamma = Slider(ax_slider_gamma, 'Recovery Prob', 0.01, 1.0, valinit=recovery_prob, valstep=0.01)
+
+# Przycisk
+ax_button = plt.axes([0.6, 0.1, 0.1, 0.05])
+start_button = Button(ax_button, 'Start')
+
+def start_simulation(event):
+    global grid, all_S, all_I, all_R, h_S, h_I, h_R, number_patient0, ani
+
+    infection_prob = slider_beta.val
+    recovery_prob = slider_gamma.val
+
+    # Resetowanie stanu
+    grid = np.zeros((size, size), dtype=int)
+    init_infected = np.random.choice(range(size * size), number_patient0, replace=False)
+    for id in init_infected:
+        grid[id // size, id % size] = 1
+
+    all_S = size * size - number_patient0
+    all_I = number_patient0
+    all_R = 0
+    h_S.clear()
+    h_I.clear()
+    h_R.clear()
+
+    # Odtworzenie animacji
+    try:
+        ani.event_source.stop()
+    except NameError:
+        pass
+    ani = animation.FuncAnimation(fig, update, frames=400, interval=100, blit=False, repeat=False)
+    plt.draw()
+
+start_button.on_clicked(start_simulation)
+
 
 #animacja w matplotlib
 #fig, ax = plt.subplots()
@@ -113,6 +154,8 @@ def update(frame):
     global all_R, all_S
     global h_S,h_I,h_R
     #global line_S,line_I,line_R
+    infection_prob = slider_beta.val
+    recovery_prob = slider_gamma.val
 
     new_grid = grid.copy()
 
@@ -177,6 +220,6 @@ line_I_diff, = ax2.plot(t, I_diff, 'g--', label='I (ODE)')
 line_R_diff, = ax2.plot(t, R_diff, 'r--', label='R (ODE)')
 
 
-ani = animation.FuncAnimation(fig, update, frames=400, interval=100, blit=False, repeat=False)
+#ani = animation.FuncAnimation(fig, update, frames=400, interval=100, blit=False, repeat=False)
 #ani.save("animation.mp4", writer="ffmpeg")
 plt.show()
