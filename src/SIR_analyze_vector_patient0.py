@@ -32,7 +32,7 @@ def simulate(infection_prob, recovery_prob, number_patient0, max_iter=1000):
     return np.sum(grid == 0), np.sum(grid == 2)
 
 # Parametry
-values = np.arange(0.01, 0.5, 0.03)
+values = np.arange(0.01, 0.5, 0.01)
 size2 = len(values)
 num_patient_configs = len(patient0_values)
 results = np.zeros((num_patient_configs, size2, size2), dtype=float)
@@ -54,7 +54,7 @@ fig, axes = plt.subplots(2, (len(patient0_values) + 1) // 2, figsize=(15, 10), c
 for idx, patient0 in enumerate(patient0_values):
     ax = axes[idx // ((len(patient0_values) + 1) // 2)][idx % ((len(patient0_values) + 1) // 2)]
     im = ax.imshow(results[idx], cmap='jet', origin='lower', extent=[0.01, 0.49, 0.01, 0.49])
-    ax.set_title(f'{patient0} pacjentów 0')
+    ax.set_title(f'{(patient0/size**2)*100}% pacjentów 0')
     ax.set_xlabel('recovery_prob')
     ax.set_ylabel('infection_prob')
 

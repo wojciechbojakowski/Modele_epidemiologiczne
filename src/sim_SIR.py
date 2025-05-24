@@ -2,11 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import matplotlib.patches as mpatches
+from scipy.integrate import odeint
+
 
 size = 50  # Rozmiar siatki
-infection_prob = 0.4  # Prawdopodobieństwo zakażenia sąsiada
+infection_prob = 0.15  # Prawdopodobieństwo zakażenia sąsiada
 recovery_prob = 0.1  # Prawdopodobieństwo wyzdrowienia
-number_patient0 = 75 #liczba chorych na początku
+number_patient0 = 10 #liczba chorych na początku
 
 grid = np.zeros((size, size), dtype=int)
 
@@ -146,6 +148,34 @@ def update(frame):
     grid = new_grid
     im.set_array(grid)
     return [im, line_S, line_I, line_R]
+
+def sir_model(y, t, beta, gamma):
+    S, I, R = y
+    dSdt = -beta * S * I
+    dIdt = beta * S * I - gamma * I
+    dRdt = gamma * I
+    return [dSdt, dIdt, dRdt]
+
+# Parametry zbieżne z parametrami symulacji
+N = size * size
+beta = infection_prob
+gamma = recovery_prob
+
+# Początkowe warunki
+I0 = number_patient0 / N
+S0 = 1 - I0
+R0 = 0
+y0 = [S0, I0, R0]
+
+t = np.linspace(0, 400, 400)  # 400 kroków czasowych
+
+solution = odeint(sir_model, y0, t, args=(beta, gamma))
+S_diff, I_diff, R_diff = solution.T * N  # Skalowanie do liczby osób
+
+line_S_diff, = ax2.plot(t, S_diff, 'b--', label='S (ODE)')
+line_I_diff, = ax2.plot(t, I_diff, 'g--', label='I (ODE)')
+line_R_diff, = ax2.plot(t, R_diff, 'r--', label='R (ODE)')
+
 
 ani = animation.FuncAnimation(fig, update, frames=400, interval=100, blit=False, repeat=False)
 #ani.save("animation.mp4", writer="ffmpeg")
